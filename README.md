@@ -1,2 +1,2 @@
 # Mparloc
-Multi-parametric Earthquake location based on obspy library  
+Location Module: Bayesian Method for Earthquake Location Using Multi-Parameter Data
