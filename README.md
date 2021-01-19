@@ -1,2 +1,2 @@
 # Mparloc
-Multi-parametric location 
+Multi-parametric Earthquake location based on obspy library  
