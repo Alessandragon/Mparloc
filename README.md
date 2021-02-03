@@ -16,6 +16,11 @@ is implemented to explore in a fast way a even very dense computational grids.
 
 ## Config and Installing
 
+Mparloc is written in pure python3 code, with several external library dependency:
+
+    obspy, numpy, nllgrid, math, pyproj, taup, matplotlib
+
+
 
 ## Testing
 
