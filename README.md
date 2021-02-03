@@ -32,7 +32,7 @@ and build your own real-time module!
 
 ## References
 
-> Zollo, A., Caruso, A., De Landro , G. , Colombelli, S. Elia, L. 2020.
+> Zollo, A. , Caruso, A. , De Landro , G. , Colombelli, S. , Elia, L. 2020.
 > A Bayesian Method for Real-time Earthquake Location Using Multi-Parameter Data.
 > Journal of geophysical research - solid earth doi: [https://doi.org/10.1002/essoar.10503363.1]
 
