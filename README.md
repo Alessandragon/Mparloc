@@ -30,7 +30,7 @@ After the installation of all dependence you can test the library run in the mai
 	python Example.py (Windows environment)
 	
 if the code work well the output files are provided 
-in path: "local-path/Mparloc/EXAMPLE/sac/".
+at path: local-path/Mparloc/EXAMPLE/sac/
 
 ## Important Note
 
