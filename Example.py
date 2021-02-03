@@ -1,6 +1,11 @@
 #!/usr/bin/python3
-from MParLoc import Luncher
+#IMPORT OF LIBRERY
+from MParLoc import Luncher 
 from MParLoc import grid_creator
-
-grid_creator('EXAMPLE','sac')
+##############################
+grid_creator('EXAMPLE','sac') 
+# RUN THE GRID CREATOR CODE THAT READ THE NONLINLOC GRIDS 
+#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUT GRIDS
 Luncher('EXAMPLE','sac')
+# RUN THE GRID CREATOR CODE THAT READ THE NONLINLOC GRIDS 
+#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUT GRIDS
