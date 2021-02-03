@@ -21,6 +21,7 @@ Mparloc is written in pure python3 code tested with version 3.7.3, with several 
     obspy, numpy, nllgrid, math, pyproj, taup, matplotlib
 
 After the installation of all dependence you can test the library run in the main folder the command:
+
     python3 Example.py (Ubuntu environment) or python Example.py (Windows environment)
 
 ## Testing
