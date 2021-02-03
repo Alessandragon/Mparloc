@@ -10,7 +10,9 @@ the information derived from the differential P-wave and S-wave arrival times,
 amplitude ratios and back-azimuths measured at a minimum of two stations. 
 A complete posterior pdf of location is provided as a probability map on the 
 computational grids and uncertainty of location is estimate as the range where 
-the probability is over a prefixed threshold.
+the probability is over a prefixed threshold. 
+In order to improve the speed performance, a pseudo-global search algorithm 
+is implemented to explore in a fast way a even very dense computational grids.
 
 
 ## Config and Installing
