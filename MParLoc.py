@@ -57,7 +57,7 @@ def grid_creator(Network_folder,Event_folder):
    for count in file:
      os.remove(count)
  Lista_sac=sorted(glob.glob('*'))
- Nomi=open('../input_files/list_stations_4loc.dat')
+ Nomi=open('../list_stations_4loc.dat')
  Config=open('../../config_files/run_loc.conf')
  Nomi=Nomi.read()
  Nomi=Nomi.rsplit('\n')
@@ -590,7 +590,7 @@ class MainCode():
             self.s_phases=False	
           else:		
             self.s_phases=True		  
-          Tabella_Pesi=open('input_files/weights_table.dat')
+          Tabella_Pesi=open('../config_files/weights_table.dat')
           Tabella_Pesi=Tabella_Pesi.read()  
           Tabella_Pesi=Tabella_Pesi.rsplit('\n')
           self.Tabella_P=[[2,0]]
@@ -613,7 +613,7 @@ class MainCode():
           self.trX=[]
           global NAME
           NAME=[]
-          Nomi=open('../input_files/list_stations_4loc.dat')
+          Nomi=open('../list_stations_4loc.dat')
           Nomi=Nomi.read()
           Nomi=Nomi.rsplit('\n')
           self.index=0
