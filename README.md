@@ -1,5 +1,4 @@
-# Mparloc - Multiparametric probabilistic Location
-Location Module: Bayesian Method for Earthquake Location Using Multi-Parameter Data
+# Mparloc: Bayesian Method for Earthquake Location Using Multi-Parameter Data
 (c) 2020-2021 Alessandro Caruso <alessandro.caruso@unina.it>,
 
 [DOI](https://doi.org/10.1002/essoar.10503363.1)
