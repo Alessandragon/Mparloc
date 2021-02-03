@@ -5,7 +5,7 @@ Location Module: Bayesian Method for Earthquake Location Using Multi-Parameter D
 [DOI](https://doi.org/10.1002/essoar.10503363.1)
 
 ## Introduction
-We implemant a Bayesian method for the earthquake location which combines 
+I implemant a Bayesian method for the earthquake location which combines 
 the information derived from the differential P-wave and S-wave arrival times, 
 amplitude ratios and back-azimuths measured at a minimum of two stations. 
 A complete posterior pdf of location is provided as a probability map on the 
