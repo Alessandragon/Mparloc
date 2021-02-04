@@ -1,7 +1,7 @@
 # Mparloc: Bayesian Method for Earthquake Location Using Multi-Parameter Data
 (c) 2020-2021 Alessandro Caruso <alessandro.caruso@unina.it>,
 
-[DOI](https://doi.org/10.1002/essoar.10503363.1)
+[DOI](https://doi.org/10.1029/2020JB020359)
 
 ## Introduction
 I implemant a Bayesian method for the earthquake location which combines 
@@ -19,6 +19,11 @@ is implemented to explore in a fast way a even very dense computational grids.
 Mparloc is written in pure python3 code tested with version 3.7.3, with several external library dependency:
 
     obspy, numpy, nllgrid, math, pyproj, taup, matplotlib
+	
+The Mparloc library consists of two main functions implemented in the source file Mparloc.py:
+ 
+    grid_creatore(Name_network,Name_event)
+    Launcher(Name_network,Name_event)
 
 
 
@@ -44,7 +49,7 @@ and build your own real-time module!
 
 > Zollo, A. , Caruso, A. , De Landro , G. , Colombelli, S. , Elia, L. 2020.
 > A Bayesian Method for Real-time Earthquake Location Using Multi-Parameter Data.
-> Journal of geophysical research - solid earth doi: [https://doi.org/10.1002/essoar.10503363.1]
+> JOURNAL OF GEOPHYSICAL RESEARCH: SOLID EARTH doi: [https://doi.org/10.1029/2020JB020359]
 
 
 
