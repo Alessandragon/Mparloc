@@ -47,7 +47,7 @@ location algorithm, such as:
 The configuration of the module is done by compiling two files located in the `config_files` folder:
 
     run_loc.conf # Main configuration file
-    weights_table.dat # Correspondence table between SNR and the error in Second on pick
+    weights_table.dat # Correspondence table between SNR and the error in second on seismic pick phase
 	
 Example of `weights_table` file:
 
