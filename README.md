@@ -60,28 +60,30 @@ Example of `weights_table` file:
 Example of `run_loc` file:
 
     #Setting parameters:
+	
+    #Parameter to set grid computationl precision: 'f' for float, 'd' for double-precision
     grid_precision: f
-    #Confidence level for error estimate (in percentage)
+    #Confidence level for error estimate (in percentage) float number between 0 and 1
     Confidence_probability_threshold_level: 0.5
-    #Time window in seconds for SNR estimate for P phase
+    #Time window in seconds for SNR estimate for P phase float positive number
     snr_wind_p: 0.5
-    #Time window in seconds for SNR estimate for S phase
+    #Time window in seconds for SNR estimate for S phase float positive number
     snr_wind_s: 0.5
-    #Minimum number of P phases for eqk location
+    #Minimum number of P phases for eqk location: integer positive number
     no_min_p: 2
-    #Minimum number of S phases for eqk location
+    #Minimum number of S phases for eqk location: integer positive number
     no_min_s: 2
-    #Use back-azimuth data for eqk location
+    #Use back-azimuth data for eqk location: False or True
     back_az: True
-    #back-azimuth standard deviation in degree
+    #back-azimuth standard deviation in degree: integer positive number
     back_az_error: 30
-    #Use Pv differential amplitude data for eqk location
+    #Use Pv differential amplitude data for eqk location: False or True
     diff_Amp: True
-    #differential amplitude b coefficient:
+    #Phase Amplitude attenuation coefficient: float negative number
     diff_Amp_b: -1.78
-    #differential amplitude standard deviation
+    #differential amplitude standard deviation: float positive number
     diff_Amp_error: 0.5
-    #Use S phases for eqk location
+    #Use S phases for eqk location: False or True
     s_phases: True
 
 
