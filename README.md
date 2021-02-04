@@ -27,7 +27,7 @@ Mparloc library consists of two main functions implemented in the source file Mp
 
 `Name_network` is a string object that contain the name of the folder where are:
 
-The `.buf` and `.hdr` files of time grids created with the Nonlinloc tools for the 
+The `.buf` and `.hdr` files of time grids created with Nonlinloc tools for the 
 specific network and located in a dedicated sub-folder named `grids`.
 
 The `sac` files of the accelerometric data contained in a sub-folder whose name is 
