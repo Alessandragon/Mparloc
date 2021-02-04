@@ -22,8 +22,8 @@ Mparloc is written in pure python3 code tested with version 3.7.3, with several 
 	
 Mparloc library consists of two main functions implemented in the source file Mparloc.py:
  
-    grid_creatore(Name_network,Name_event)
-    Launcher(Name_network,Name_event)
+    grid_creatore(Name_network,Name_event) # Tool for creating grids starting from NnLinLoc grids.
+    Launcher(Name_network,Name_event) # Function that initialize and launch the Location algorithm.
 
 `Name_network` is a string object that contain the name of the folder where are:
 
@@ -44,7 +44,7 @@ location algorithm, such as:
     BSC3
     CGG3 ....
 
-	
+
 
 
 ## Testing
