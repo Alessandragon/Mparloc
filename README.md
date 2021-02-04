@@ -47,7 +47,7 @@ location algorithm, such as:
 The configuration of the module is done by compiling two files located in the `config_files` folder:
 
     run_loc.conf # Main configuration file
-    weights_table.dat # Correspondence table between SNR and the error in second on seismic pick phase
+    weights_table.dat # Correspondence table between SNR(Signal to Noise Ratio) and the error in second on seismic pick phase
 	
 Example of `weights_table` file:
 
@@ -59,8 +59,31 @@ Example of `weights_table` file:
 
 Example of `run_loc` file:
 
+    #Setting parameters:
+    grid_precision: f
+    #Confidence level for error estimate (in percentage)
+    Confidence_probability_threshold_level: 0.5
+    #Time window in seconds for SNR estimate for P phase
+    snr_wind_p: 0.5
+    #Time window in seconds for SNR estimate for S phase
+    snr_wind_s: 0.5
+    #Minimum number of P phases for eqk location
+    no_min_p: 2
+    #Minimum number of S phases for eqk location
+    no_min_s: 2
+    #Use back-azimuth data for eqk location
+    back_az: True
+    #back-azimuth standard deviation in degree
+    back_az_error: 30
+    #Use Pv differential amplitude data for eqk location
+    diff_Amp: True
+    #differential amplitude b coefficient:
+    diff_Amp_b: -1.78
+    #differential amplitude standard deviation
+    diff_Amp_error: 0.5
+    #Use S phases for eqk location
+    s_phases: True
 
-## Testing
 
 After the installation of all dependence you can test the library run in the main folder the command:
 
