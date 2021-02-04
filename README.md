@@ -30,10 +30,21 @@ Mparloc library consists of two main functions implemented in the source file Mp
 The `.buf` and `.hdr` files of time grids created with the Nonlinloc tools for the 
 specific network and located in a dedicated sub-folder named `grids`.
 
-The `sac` files contained in a sub-folder whose name is contained in the string 
-`Name_event` and appropriately set in the fields:
+The `sac` files of the accelerometric data contained in a sub-folder whose name is 
+contained in the string `Name_event` with the station fields and transduction 
+coefficient correctly set in the header.
 
-    
+The text file `list_stations_4loc.dat` with the station name list used from 
+location algorithm, such as:
+
+    AND3
+    AVG3
+    BEL3
+    BENI
+    BSC3
+    CGG3 ....
+
+	
 
 
 ## Testing
