@@ -20,11 +20,18 @@ Mparloc is written in pure python3 code tested with version 3.7.3, with several 
 
     obspy, numpy, nllgrid, math, pyproj, taup, matplotlib
 	
-The Mparloc library consists of two main functions implemented in the source file Mparloc.py:
+Mparloc library consists of two main functions implemented in the source file Mparloc.py:
  
     grid_creatore(Name_network,Name_event)
     Launcher(Name_network,Name_event)
 
+`Name_network` is a string object that contain the name of the folder where are:
+> The .buf and .hdr files of time grids created with the Nonlinloc tools for the 
+specific network and located in a dedicated sub-folder named `grids`.
+>The sac files contained in a sub-folder whose name is contained in the string 
+`Name_event` and appropriately set in the fields:
+
+    
 
 
 ## Testing
