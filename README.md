@@ -46,9 +46,18 @@ location algorithm, such as:
 
 The configuration of the module is done by compiling two files located in the `config_files` folder:
 
-    run_loc.conf #Main configuration file
-    weights_table.dat # Correspondence table between SNR and weights used in the localization inversion algorithm. 
+    run_loc.conf # Main configuration file
+    weights_table.dat # Correspondence table between SNR and probabilistic error on picking
 	
+Example of `weights_table` file:
+
+    # SNRmin SNRmax Wp Ws
+    10 0.25 0.55  # In the first line there is only SNRmax
+    10 20 0.15 0.25
+    20 50 0.1 0.15
+    50 0.015 0.015 # In the last line there is only SNRmin
+
+Example of `run_loc` file:
 
 
 ## Testing
