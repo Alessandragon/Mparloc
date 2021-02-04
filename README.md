@@ -10,8 +10,8 @@ amplitude ratios and back-azimuths measured at a minimum of two stations.
 A complete posterior pdf of location is provided as a probability map on the 
 computational grids and uncertainty of location is estimate as the range where 
 the probability is over a prefixed threshold. 
-In order to improve the speed performance, a pseudo-global search algorithm 
-is implemented to explore in a fast way a even very dense computational grids.
+In order to improve the speed performance, a pseudo-global search (like octree)
+algorithm is implemented to explore in a fast way a even very dense computational grids.
 
 
 ## Config and Installing
@@ -44,7 +44,11 @@ location algorithm, such as:
     BSC3
     CGG3 ....
 
+The configuration of the module is done by compiling two files located in the `config_files` folder:
 
+    run_loc.conf #Main configuration file
+    weights_table.dat # Correspondence table between SNR and weights used in the localization inversion algorithm. 
+	
 
 
 ## Testing
