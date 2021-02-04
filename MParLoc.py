@@ -1246,7 +1246,7 @@ class MainCode():
            end_loc=True
 		   
 		   
-def Luncher(Network_folder,Event_folder):
+def Launcher(Network_folder,Event_folder):
  global win
  global Network_path
  global Event_path
