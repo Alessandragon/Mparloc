@@ -62,6 +62,7 @@ def grid_creator(Network_folder,Event_folder):
  Nomi=Nomi.read()
  Nomi=Nomi.rsplit('\n')
  Config=Config.read()
+ grid_precision=str(Config.rsplit('grid_precision: ')[1].rsplit('\n')[0])
  diff_Amp_b=float(Config.rsplit('diff_Amp_b: ')[1].rsplit('\n')[0])
  NAME=[]
  tr=[]
@@ -102,22 +103,32 @@ def grid_creator(Network_folder,Event_folder):
   Rnode=None
  
  
-  grid_list_arrivals=sorted(glob.glob('*.P.*'+NAME[z]+'*'+'.hdr'))		   
-  arrival_matrix=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  grid_list_arrivals=sorted(glob.glob('*.P.*'+NAME[z]+'*'+'.hdr'))		 
+  if 'f' in   grid_precision:
+   arrival_matrix=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  if 'd' in   grid_precision:
+   arrival_matrix=np.float64(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
   arrival_matrixId=open('arrival_matrix'+NAME[z]+'.bin','w')
   arrival_matrix.tofile(arrival_matrixId)
  
   grid_list_arrivals=sorted(glob.glob('*.S.*'+NAME[z]+'*'+'.hdr'))
-  arrival_matrix_S=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  if 'f' in   grid_precision:
+   arrival_matrix_S=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  if 'd' in   grid_precision:
+   arrival_matrix_S=np.float64(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
   arrival_matrixId=open('arrival_matrixS'+NAME[z]+'.bin','w') 
   arrival_matrix_S.tofile(arrival_matrixId)
- 
-  BAznode=np.float32(np.degrees(np.arctan2(xx[z]-xnode,yy[z]-ynode)+math.pi))
-  Rnode=np.float32(diff_Amp_b*np.log10(np.sqrt(((xnode - xx[z])**2 + (yy[z] - ynode)**2)+znode**2)/1000))
-  BAznodeId=open('BAznode'+NAME[z]+'.bin','w')
+  
+  BAznodeId=open('BAznode'+NAME[z]+'.bin','w')  
+  RnodeId=open('Rnode'+NAME[z]+'.bin','w')
+  if 'f' in   grid_precision: 
+   BAznode=np.float32(np.degrees(np.arctan2(xx[z]-xnode,yy[z]-ynode)+math.pi))
+   Rnode=np.float32(diff_Amp_b*np.log10(np.sqrt(((xnode - xx[z])**2 + (yy[z] - ynode)**2)+znode**2)/1000))
+  if 'd' in   grid_precision:
+   BAznode=np.float64(np.degrees(np.arctan2(xx[z]-xnode,yy[z]-ynode)+math.pi))
+   Rnode=np.float64(diff_Amp_b*np.log10(np.sqrt(((xnode - xx[z])**2 + (yy[z] - ynode)**2)+znode**2)/1000))
   BAznode.reshape(((NodeX*NodeY*NodeZ))).tofile(BAznodeId)
   BAznodeId.close()
-  RnodeId=open('Rnode'+NAME[z]+'.bin','w')
   Rnode.reshape(((NodeX*NodeY*NodeZ))).tofile(RnodeId)
   RnodeId.close()
  os.chdir('../..')
@@ -234,7 +245,7 @@ class Location_MAP():
         Lonsup,Latsup=map(win.xnode[Index_errorX[1],0,0],win.ynode[0,Index_errorY[1],0],inverse=True)
         win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION LAT: '+str(Latev)+'['+str(LatInf)+' , '+str(Latsup)+']'+'\n') 
         win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION LON: '+str(Lonev)+'['+str(Loninf)+' , '+str(Lonsup)+']'+'\n')  
-        win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION DEP(km): '+str(-win.znode[index_LocY[0],index_LocX[0],index_LocZ[0]]/1000)+'['+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[0]]/1000)+' , '+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[1]]/1000)+']'+'\n')  
+        win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION DEP(km): '+str(-win.znode[index_LocX[0],index_LocY[0],index_LocZ[0]]/1000)+'['+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[0]]/1000)+' , '+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[1]]/1000)+']'+'\n')  
         win.file_log.write('Error_E-W: '+str(np.abs(win.xnode[Index_errorX[0],0,0]-win.xnode[Index_errorX[1],0,0])/2000)+' Km\n') 
         win.file_log.write('Error_N-S: '+str(np.abs(win.ynode[0,Index_errorY[0],0]-win.ynode[0,Index_errorY[1],0])/2000)+' Km\n') 
         win.file_log.write('Error_Z: '+str(np.abs(win.znode[0,0,Index_errorZ[0]]-win.znode[0,0,Index_errorZ[1]])/2000)+' Km\n') 
@@ -440,9 +451,9 @@ class Location_MAP():
 def BAZ(Trace_orig,accE,accN,staz_index):
 
 #################### DATA processing   ###############################
- AccZ=(((((Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=1,freqmax=4)
- AccE=(((((accE.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=1,freqmax=4)
- AccN=(((((accN.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=1,freqmax=4)
+ AccZ=(((((Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=0.5,freqmax=3)
+ AccE=(((((accE.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=0.5,freqmax=3)
+ AccN=(((((accN.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=0.5,freqmax=3)
  
  ################### Pre-signal noise-level estimation################
  
@@ -567,7 +578,12 @@ class MainCode():
           self.th_pro=float(config_file.rsplit('Confidence_probability_threshold_level:')[1].rsplit('\n')[0])
           grd=glob.glob(Model_path_low+r'/*buf')
           grd = NLLGrid(grd[0])
-          Path_grid=Model_path_low	  		  
+          Path_grid=Model_path_low
+          self.grid_precision=str(config_file.rsplit('grid_precision: ')[1].rsplit('\n')[0])
+          if 'f' in self.grid_precision:
+           self.grid_precision='f'
+          if 'd' in self.grid_precision:
+           self.grid_precision='d'
           self.min_numP=int(config_file.rsplit('no_min_p: ')[1].rsplit('\n')[0])	
           self.min_numS=int(config_file.rsplit('no_min_s: ')[1].rsplit('\n')[0])			
           self.snr_wind_S=float(config_file.rsplit('snr_wind_s: ')[1].rsplit('\n')[0])		 
@@ -576,6 +592,9 @@ class MainCode():
           self.diff_Amp_b=float(config_file.rsplit('diff_Amp_b: ')[1].rsplit('\n')[0])
           self.diff_Amp_error=float(config_file.rsplit('diff_Amp_error: ')[1].rsplit('\n')[0])
           self.back_az_error=float(config_file.rsplit('back_az_error: ')[1].rsplit('\n')[0])
+          min_SNR=int(config_file.rsplit('min_SNR: ')[1].rsplit('\n')[0])
+          self.data_type=[]
+
           if 'False' in self.diff_Amp:
             self.diff_Amp=False	
           else:		
@@ -593,8 +612,8 @@ class MainCode():
           Tabella_Pesi=open('../config_files/weights_table.dat')
           Tabella_Pesi=Tabella_Pesi.read()  
           Tabella_Pesi=Tabella_Pesi.rsplit('\n')
-          self.Tabella_P=[[2,0]]
-          self.Tabella_S=[[2,0]]
+          self.Tabella_P=[[min_SNR,0]]
+          self.Tabella_S=[[min_SNR,0]]
           for count in Tabella_Pesi:
            if len(count.rsplit(' '))==4:
             self.Tabella_P.append([float(count.rsplit(' ')[1]),float(count.rsplit(' ')[2])])
@@ -620,14 +639,15 @@ class MainCode():
           for i in range(0,len(Lista_sac)):
            if 'Z' in read(Lista_sac[i])[0].stats.sac.kcmpnm or 'U' in read(Lista_sac[i])[0].stats.sac.kcmpnm:
             if read(Lista_sac[i])[0].stats.station in Nomi:
+             self.data_type.append(read(Lista_sac[i])[0].stats.sac.idep)
              NAME.append(read(Lista_sac[i])[0].stats.station)
              self.tr.append(read(Lista_sac[i])[0])
              for j in range(0,len(Lista_sac)):
-              if read(Lista_sac[j])[0].stats.station == NAME[-1]:
+              if read(Lista_sac[j])[0].stats.station == NAME[-1] and read(Lista_sac[j])[0].stats.sac.idep == self.data_type[-1]:
                if 'N' in read(Lista_sac[j])[0].stats.sac.kcmpnm:
                 self.trY.append(read(Lista_sac[j])[0])
                if 'E' in read(Lista_sac[j])[0].stats.sac.kcmpnm:			
-                self.trX.append(read(Lista_sac[j])[0])			 
+                self.trX.append(read(Lista_sac[j])[0])
           global RU_sup	
           global xx
           global yy
@@ -711,8 +731,6 @@ class MainCode():
              pick.append(0)
            else:
             pick.append(0)
-          # for i in range(0,len(NAME)):
-           # print(NAME[i],str(pick[i]),str(pickS[i]))
           global data 
           global dataY
           global dataX
@@ -806,6 +824,10 @@ class MainCode():
           global Zindexs
           global Lonev
           global Latev
+          global grd		  	 
+          global NodeX
+          global NodeY
+          global NodeZ
           second_loc=1
           while True:
            if new_sum==True:
@@ -822,45 +844,49 @@ class MainCode():
             self.file_log.close()
             os.chdir(Path_grid)
             lock_log.release()
+            if self.diff_Amp:
+             self.RsumErr=np.where(self.RsumErr==1, 0, self.RsumErr)
             if self.back_az:
-             if np.sum((self.BAzsumErr))!=0:
+             self.BAzsumErr=np.where(self.BAzsumErr==1, 0, self.BAzsumErr)
+            self.TsumErr=np.where(self.TsumErr==1, 0, self.TsumErr)
+            self.TsumErr_S_P=np.where(self.TsumErr_S_P==1, 0, self.TsumErr_S_P)
+            self.TsumErr_S=np.where(self.TsumErr_S==1, 0, self.TsumErr_S)
+
+            if np.sum((self.TsumErr))!=0:
+               TsumErr=(self.TsumErr.copy())
+               TsumErr=TsumErr/np.sum((TsumErr))
+            else:
+               TsumErr=(self.TsumErr.copy())	
+            if np.sum((self.TsumErr_S_P))!=0:
+               TsumErr_S_P=(self.TsumErr_S_P.copy())
+            else:
+               TsumErr_S_P=1
+            if np.sum((self.TsumErr_S))!=0:
+               TsumErr_S=(self.TsumErr_S.copy())
+               TsumErr_S=TsumErr_S/np.sum((TsumErr_S))
+            else:
+               TsumErr_S=1
+            if self.back_az:
+               if np.sum((self.BAzsumErr))!=0:
                 BAzsumErr=(self.BAzsumErr.copy())
                 BAzsumErr=BAzsumErr/np.sum((BAzsumErr))
-             else:
+               else:
                 BAzsumErr=1
             else:
                 BAzsumErr=1
             if self.diff_Amp:
-             if np.sum((self.RsumErr))!=0:
+               if np.sum((self.RsumErr))!=0:
                 RsumErr=(self.RsumErr.copy())
-                RsumErr=RsumErr/np.sum((RsumErr))
-             else:
-                RsumErr=1
+                RsumErr=RsumErr/np.sum(RsumErr)
+               else:
+                RsumErr=1	
             else:
-                RsumErr=1
-            self.TsumErr=np.where(self.TsumErr==1, 0, self.TsumErr)
-            if np.sum((self.TsumErr))!=0:
-             TsumErr=(self.TsumErr.copy())/np.sum((self.TsumErr))
-            else:
-             TsumErr=1
-            self.TsumErr=np.where(self.TsumErr==0, 1, self.TsumErr)
-            self.TsumErr_S_P=np.where(self.TsumErr_S_P==1, 0, self.TsumErr_S_P)			 
-            if np.sum((self.TsumErr_S_P))!=0:
-             TsumErr_S_P=(self.TsumErr_S_P.copy())/np.sum((self.TsumErr_S_P))
-            else:
-             TsumErr_S_P=1
-            self.TsumErr_S_P=np.where(self.TsumErr_S_P==0, 1, self.TsumErr_S_P)			 
-            self.TsumErr_S=np.where(self.TsumErr_S==1, 0, self.TsumErr_S)
-            if np.sum((self.TsumErr_S))!=0:
-             TsumErr_S=(self.TsumErr_S.copy())/np.sum((self.TsumErr_S))
-            else:
-             TsumErr_S=1
-            self.TsumErr_S=np.where(self.TsumErr_S==0, 1, self.TsumErr_S)
+               RsumErr=1
+			   
             if self.s_phases:
-              self.Locmatrix=TsumErr*TsumErr_S_P*TsumErr_S*RsumErr*BAzsumErr
+               self.Locmatrix=TsumErr*TsumErr_S_P*TsumErr_S*BAzsumErr*RsumErr
             else:
-              self.Locmatrix=TsumErr*RsumErr*BAzsumErr			 
-            self.Locmatrix=self.Locmatrix
+               self.Locmatrix=TsumErr*BAzsumErr*RsumErr	
             LocX, LocY, LocZ=(np.where(self.Locmatrix==np.max(self.Locmatrix))[0:3])
             P_teo_p=[]
             S_teo_p=[]
@@ -878,10 +904,16 @@ class MainCode():
              Lonev,Latev=map(Locx,Locy,inverse=True)
              for i in range(0,len(NAME)):
                os.chdir(Path_grid)
-               grid_list_arrivals=sorted(glob.glob('*.P.*'+NAME[i]+'*'+'.buf'))		   
-               self.arrival_matrix=NLLGrid(grid_list_arrivals[0]).array
-               grid_list_arrivals_S=sorted(glob.glob('*.S.*'+NAME[i]+'*'+'.buf'))		   
-               self.arrival_matrix_S=NLLGrid(grid_list_arrivals_S[0]).array
+               f = open(Model_path_high+r'/arrival_matrix'+NAME[i]+'.bin', "rb")
+               floats = array(self.grid_precision)
+               floats.fromfile(f,NodeX*NodeY*NodeZ)
+               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))
+               self.arrival_matrix=(floats)
+               f = open(Model_path_high+r'/arrival_matrixS'+NAME[i]+'.bin', "rb")
+               floats = array(self.grid_precision)
+               floats.fromfile(f,NodeX*NodeY*NodeZ)
+               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))
+               self.arrival_matrix_S=(floats)
                dist=calc_dist(Latev,Lonev,staz_lat[i],staz_lon[i],flattening_of_planet=0,radius_of_planet_in_km=6372.797)
                evdp=-self.znode[LocX,LocY,LocZ]/1000
                if evdp < 0:
@@ -895,13 +927,6 @@ class MainCode():
                P_teo_p.append(self.arrival_matrix[LocX,LocY,LocZ][0])	
                os.chdir(Path_OUT)
              if second_loc==0:
-              global grd
-              dx_pre=grd.dx
-              dy_pre=grd.dy
-              dz_pre=grd.dz		  	 
-              global NodeX
-              global NodeY
-              global NodeZ
               Path_grid=Model_path_high
               grd=glob.glob(Model_path_high+r'/*buf')
               grd = NLLGrid(grd[0])
@@ -1028,7 +1053,10 @@ class MainCode():
                Pa_noise=(np.max(np.abs(Trace_orig.trim(pick[staz_index]-(self.snr_wind_p+0.2),pick[staz_index]-0.2).detrend('constant').data))*self.logger[staz_index]/self.sensor[staz_index])*100
                Pa=(np.max(np.abs(acc.trim(pick[staz_index],pick[staz_index]+self.snr_wind_p).detrend('constant').data))*self.logger[staz_index]/self.sensor[staz_index])*100
                SNR[staz_index]=(Pa/Pa_noise)
-               self.Pv[staz_index]=(np.max(np.abs(Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+2).detrend('constant').filter("bandpass",freqmin=0.075,freqmax=25).data))*self.logger[staz_index]/self.sensor[staz_index])*100
+               if self.data_type[staz_index]==3:
+                self.Pv[staz_index]=(np.max(np.abs(Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+2).detrend('constant').filter("bandpass",freqmin=0.075,freqmax=25).data))*self.logger[staz_index]/self.sensor[staz_index])*100
+               if self.data_type[staz_index]==5:
+                self.Pv[staz_index]=(np.max(np.abs((Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+2).integrate().detrend('constant').filter("bandpass",freqmin=0.075,freqmax=25).data)))*self.logger[staz_index]/self.sensor[staz_index])*100
                if SNR[staz_index] <= self.Tabella_P[0][0]:
                 pick[staz_index]=self.Tabella_P[0][1]
                if SNR[staz_index] > self.Tabella_P[0][0]  and SNR[staz_index] <= self.Tabella_P[1][0]:
@@ -1081,88 +1109,100 @@ class MainCode():
             iter_pre=copy.copy(iter)
             iter=8-iter_i
             if iter_i !=1:
-              if np.sum((self.TsumErr[Xindexs,Yindexs,Zindexs]))!=0:
-               TsumErr=(self.TsumErr.copy())
-               TsumErr[Xindexs,Yindexs,Zindexs]=TsumErr[Xindexs,Yindexs,Zindexs]/np.sum((TsumErr[Xindexs,Yindexs,Zindexs]))
+              TsumErr=(self.TsumErr.copy())
+              TsumErr=np.where(TsumErr==1, 0, TsumErr)
+              if np.sum(TsumErr)>0:
+               TsumErr=TsumErr/np.sum((TsumErr))
               else:
                TsumErr=(self.TsumErr.copy())	
-              if np.sum((self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]))!=0:
+              if self.s_phases:
                TsumErr_S_P=(self.TsumErr_S_P.copy())
-               TsumErr_S_P[Xindexs,Yindexs,Zindexs]=TsumErr_S_P[Xindexs,Yindexs,Zindexs]/np.sum((TsumErr_S_P[Xindexs,Yindexs,Zindexs]))
+               TsumErr_S_P=np.where(TsumErr_S_P==1, 0, TsumErr_S_P)
+               if np.sum((TsumErr_S_P))>0:
+                TsumErr_S_P=TsumErr_S_P/np.sum((TsumErr_S_P))
+               else:
+                TsumErr_S_P=1
               else:
                TsumErr_S_P=1
-              if np.sum((self.TsumErr_S[Xindexs,Yindexs,Zindexs]))!=0:
+              if self.s_phases:
                TsumErr_S=(self.TsumErr_S.copy())
-               TsumErr_S[Xindexs,Yindexs,Zindexs]=TsumErr_S[Xindexs,Yindexs,Zindexs]/np.sum((TsumErr_S[Xindexs,Yindexs,Zindexs]))
+               TsumErr_S=np.where(TsumErr_S==1, 0, TsumErr_S)
+               if np.sum((TsumErr_S))>0:
+                TsumErr_S=TsumErr_S/np.sum((TsumErr_S))
+               else:
+                TsumErr_S=1
               else:
                TsumErr_S=1
               if self.back_az:
-               if np.sum((self.BAzsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                 BAzsumErr=(self.BAzsumErr.copy())
-                BAzsumErr[Xindexs,Yindexs,Zindexs]=BAzsumErr[Xindexs,Yindexs,Zindexs]/np.sum((BAzsumErr[Xindexs,Yindexs,Zindexs]))
-               else:
-                BAzsumErr=1
+                BAzsumErr=np.where(BAzsumErr==1, 0, BAzsumErr)
+                if np.sum((BAzsumErr))>0:
+                 BAzsumErr=BAzsumErr/np.sum((BAzsumErr))
+                else:
+                 BAzsumErr=1
               else:
                 BAzsumErr=1
               if self.diff_Amp:
-               if np.sum((self.RsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                 RsumErr=(self.RsumErr.copy())
-                RsumErr[Xindexs,Yindexs,Zindexs]=RsumErr[Xindexs,Yindexs,Zindexs]/np.sum((RsumErr[Xindexs,Yindexs,Zindexs]))
-               else:
-                RsumErr=1	
+                RsumErr=np.where(RsumErr==1, 0, RsumErr)
+                if np.sum(RsumErr)>0:
+                 RsumErr=RsumErr/np.sum(RsumErr)
+                else:
+                 RsumErr=1	
               else:
-               RsumErr=1					
+               RsumErr=1
               if self.s_phases:
                self.Locmatrix=TsumErr*TsumErr_S_P*TsumErr_S*BAzsumErr*RsumErr
               else:
                self.Locmatrix=TsumErr*BAzsumErr*RsumErr
-              self.Locmatrix=np.where(self.Locmatrix==1, 0, self.Locmatrix)
               if np.sum(self.Locmatrix)==0:
-               Xindex, Yindex, Zindex=(np.where(self.Locmatrix==0)[0:3])
+               Xvect=np.arange(XMin,XMax,iter)
+               Yvect=np.arange(YMin,YMax,iter)
+               Zvect=np.arange(ZMin,ZMax,iter)
               else:
                Xindex, Yindex, Zindex=(np.where(self.Locmatrix>(np.max(self.Locmatrix)/100))[0:3])
-              if np.min(Xindex)!=np.max(Xindex):
-               XMin= np.min(Xindex)
-               XMax= np.max(Xindex)
-              else:
-               if np.min(Xindex)-iter_pre>=0:
-                XMin= np.min(Xindex)-iter_pre
+               if np.min(Xindex)!=np.max(Xindex):
+                XMin= np.min(Xindex)
+                XMax= np.max(Xindex)
                else:
-                XMin=0
-               if np.max(Xindex)+iter_pre<=NodeX:
-                XMax= np.max(Xindex)+iter_pre
+                if np.min(Xindex)-iter_pre>=0:
+                 XMin= np.min(Xindex)-iter_pre
+                else:
+                 XMin=0
+                if np.max(Xindex)+iter_pre<=NodeX:
+                 XMax= np.max(Xindex)+iter_pre
+                else:
+                 XMax=NodeX
+               if np.min(Yindex)!=np.max(Yindex):
+                YMin= np.min(Yindex)
+                YMax= np.max(Yindex)
                else:
-                XMax=NodeX
-              if np.min(Yindex)!=np.max(Yindex):
-               YMin= np.min(Yindex)
-               YMax= np.max(Yindex)
-              else:
-               if np.min(Yindex)-iter_pre>=0:
-                YMin= np.min(Yindex)-iter_pre
+                if np.min(Yindex)-iter_pre>=0:
+                 YMin= np.min(Yindex)-iter_pre
+                else:
+                 YMin=0
+                if np.max(Yindex)+iter_pre<=NodeY:
+                 YMax= np.max(Yindex)+iter_pre
+                else:
+                 YMax=NodeY
+               if np.min(Zindex)!=np.max(Zindex):
+                ZMin= np.min(Zindex)
+                ZMax= np.max(Zindex)
                else:
-                YMin=0
-               if np.max(Yindex)+iter_pre<=NodeY:
-                YMax= np.max(Yindex)+iter_pre
-               else:
-                YMax=NodeY
-              if np.min(Zindex)!=np.max(Zindex):
-               ZMin= np.min(Zindex)
-               ZMax= np.max(Zindex)
-              else:
-               if np.min(Zindex)-iter_pre>=0:
-                ZMin= np.min(Zindex)-iter_pre
-               else:
-                ZMin=0
-               if np.max(Zindex)+iter_pre<=NodeZ:
-                ZMax= np.max(Zindex)+iter_pre
-               else:
-                ZMax=NodeZ
-              Xvect_pre.extend(list(Xvect))
-              Yvect_pre.extend(list(Yvect))
-              Zvect_pre.extend(list(Zvect))
-              Xvect=np.arange(XMin,XMax,iter)
-              Yvect=np.arange(YMin,YMax,iter)
-              Zvect=np.arange(ZMin,ZMax,iter) 
+                if np.min(Zindex)-iter_pre>=0:
+                 ZMin= np.min(Zindex)-iter_pre
+                else:
+                 ZMin=0
+                if np.max(Zindex)+iter_pre<=NodeZ:
+                 ZMax= np.max(Zindex)+iter_pre
+                else:
+                 ZMax=NodeZ
+               Xvect_pre.extend(list(Xvect))
+               Yvect_pre.extend(list(Yvect))
+               Zvect_pre.extend(list(Zvect))
+               Xvect=np.arange(XMin,XMax,iter)
+               Yvect=np.arange(YMin,YMax,iter)
+               Zvect=np.arange(ZMin,ZMax,iter) 
             else:
              Xvect=np.arange(XMin,XMax,iter)
              Yvect=np.arange(YMin,YMax,iter)
@@ -1189,7 +1229,7 @@ class MainCode():
             for indxc in range(0,len(NAME)):
              if pick[indxc]!=0:
               f = open(Model_path_high+r'/arrival_matrix'+NAME[indxc]+'.bin', "rb")
-              floats = array('f')
+              floats = array(self.grid_precision)
               floats.fromfile(f,NodeX*NodeY*NodeZ)
               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
               self.arrival_matrix.append(floats)
@@ -1197,7 +1237,7 @@ class MainCode():
               self.arrival_matrix.append([])	 
              if pickS[indxc]!=0:
               f = open(Model_path_high+r'/arrival_matrixS'+NAME[indxc]+'.bin', "rb")
-              floats = array('f')
+              floats = array(self.grid_precision)
               floats.fromfile(f,NodeX*NodeY*NodeZ)
               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
               self.arrival_matrix_S.append(floats)             
@@ -1205,7 +1245,7 @@ class MainCode():
               self.arrival_matrix_S.append([])
              if self.Pv[indxc]!=0:
               f = open(Model_path_high+r'/Rnode'+NAME[indxc]+'.bin', "rb")
-              floats = array('f')
+              floats = array(self.grid_precision)
               floats.fromfile(f,NodeX*NodeY*NodeZ)
               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
               self.Rnode.append(floats)
@@ -1225,7 +1265,7 @@ class MainCode():
                  if (Baz_m)!=0:
                   os.chdir(Path_grid)
                   f = open(Model_path_high+r'/BAznode'+NAME[indxc]+'.bin', "rb")
-                  floats = array('f')
+                  floats = array(self.grid_precision)
                   floats.fromfile(f,NodeX*NodeY*NodeZ)
                   floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
                   self.BAznode=floats
@@ -1236,11 +1276,11 @@ class MainCode():
                 if pickS[staz_index]!=0 and pick[staz_index]!=0 :
                   self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]=(self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]*(1/((SNR[staz_index]+SNR_S[staz_index])))*np.exp(-((((self.arrival_matrix_S[staz_index]-self.arrival_matrix[staz_index])-((pickS[staz_index]-pick[staz_index]))))**2/(((SNR[staz_index]+SNR_S[staz_index])*2)**2))))
                 for i in range(0,len(NAME)):
-                  if self.Pv[i]!=0 and self.Pv[staz_index]!=0 and self.diff_Amp:
+                  if self.Pv[i]!=0 and self.Pv[staz_index]!=0 and self.diff_Amp and NAME[staz_index]!=NAME[i]:
                     self.RsumErr[Xindexs,Yindexs,Zindexs]=self.RsumErr[Xindexs,Yindexs,Zindexs]*np.exp(-(((self.Rnode[staz_index]-self.Rnode[i])-(+self.diff_Amp_b*math.log10(self.Pv[staz_index])-self.diff_Amp_b*math.log10(self.Pv[i])))**2/(2*(self.diff_Amp_error)**2)))
-                  if pickS[staz_index]!=0 and pickS[i]!=0 and i!=staz_index and pick[staz_index]==0 :             
+                  if pickS[staz_index]!=0 and pickS[i]!=0 and i!=staz_index and pick[staz_index]==0 and NAME[staz_index]!=NAME[i]:             
                     self.TsumErr_S[Xindexs,Yindexs,Zindexs]=(self.TsumErr_S[Xindexs,Yindexs,Zindexs]*(1/((SNR_S[staz_index]+SNR_S[i])))*np.exp(-(((self.arrival_matrix_S[staz_index]-self.arrival_matrix_S[i])-(pickS[staz_index]-pickS[i]))**2/((((SNR_S[staz_index]+SNR_S[i]))*2)**2))))
-                  if pick[staz_index]!=0 and pick[i]!=0 and i!=staz_index :
+                  if pick[staz_index]!=0 and pick[i]!=0 and i!=staz_index and NAME[staz_index]!=NAME[i] :
                     self.TsumErr[Xindexs,Yindexs,Zindexs]=(self.TsumErr[Xindexs,Yindexs,Zindexs]*(1/((SNR[staz_index]+SNR[i])))*np.exp(-(((self.arrival_matrix[staz_index]-self.arrival_matrix[i])-(pick[staz_index]-pick[i]))**2/(((SNR[staz_index]+SNR[i])*2)**2))))
            new_sum=True
            end_loc=True
