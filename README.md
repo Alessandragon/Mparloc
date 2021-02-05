@@ -88,8 +88,12 @@ Example of `run_loc` file:
 After configuring the software and correctly formatting the input files, it is possible to execute
 the routine for creating and formatting the grids. For example, naming the network folder as `ISNet`
 and the event folder as `12458a`:
- 
+
+    #!/usr/bin/python3
+    #IMPORT OF LIBRERY
     from MParLoc import grid_creator
+	# RUN THE GRID CREATOR CODE THAT READ THE NONLINLOC GRIDS 
+	#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUT GRIDS
     grid_creator('ISNet','12458a')
 
 
