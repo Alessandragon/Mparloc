@@ -87,6 +87,9 @@ Example of `run_loc` file:
     s_phases: True
 
 
+## Testing
+
+
 After the installation of all dependence you can test the library run in the main folder the command:
 
     python3 Example.py (Ubuntu environment)
