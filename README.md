@@ -1,5 +1,6 @@
 # Mparloc: Bayesian Method for Earthquake Location Using Multi-Parameter Data
 (c) 2020-2021 Alessandro Caruso 
+
 post-doctoral researcher at RISSCLab - Department of PhysicsUniversity of Naples, Federico II
 <alessandro.caruso@unina.it>,
 
