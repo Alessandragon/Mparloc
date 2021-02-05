@@ -65,10 +65,10 @@ Example of `run_loc` file:
     snr_wind_p: 0.5
     #Time window in seconds for SNR estimate for S phase float positive number
     snr_wind_s: 0.5
-    #Minimum number of P phases for eqk location: integer positive number
+    #Minimum number of P phases for eqk location: integer positive number >2
     no_min_p: 2
-    #Minimum number of S phases for eqk location: integer positive number
-    no_min_s: 2
+    #Minimum number of S phases for eqk location: integer positive number >1
+    no_min_s: 1
     #Use back-azimuth data for eqk location: False or True
     back_az: True
     #back-azimuth standard deviation in degree: integer positive number
