@@ -85,6 +85,14 @@ Example of `run_loc` file:
     #Use S phases for eqk location: False or True
     s_phases: True
 
+After configuring the software and correctly formatting the input files, it is possible to execute
+the routine for creating and formatting the grids. For example, naming the network folder as `ISNet`
+and the event folder as `12458a`:
+ 
+    from MParLoc import grid_creator
+    grid_creator('ISNet','12458a')
+
+
 
 ## Testing
 
