@@ -102,7 +102,6 @@ Finally you can run the location algorithm:
     #IMPORT OF LIBRERY
     from MParLoc import Launcher
 	# RUN THE LOCATION ALGORITHM
-	#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUTH GRIDS
     Launcher('ISNet','12458a')
 	
 
