@@ -60,33 +60,33 @@ Example of `run_loc` file:
 
     #Setting parameters:
 	
-    #Parameter to set grid computationl precision: 'f' for float, 'd' for double-precision
+    #Parameter to set grid computationl precision [f for float, d for double-precision]
     grid_precision: f
-    #Confidence level for error estimate (in percentage) float number between 0 and 1
+    #Confidence level for error estimate [float number between 0 and 1]
     Confidence_probability_threshold_level: 0.5
-    #Time window in seconds for SNR estimate for P phase float positive number
+    #Time window in seconds for SNR estimate for P phase [float positive number]
     snr_wind_p: 0.5
-    #Time window in seconds for SNR estimate for S phase float positive number
+    #Time window in seconds for SNR estimate for S phase [float positive number]
     snr_wind_s: 0.5
-    #Minimum number of P phases for eqk location: integer positive number >2
+    #Minimum number of P phases for eqk location [integer positive number >2]
     no_min_p: 2
-    #Minimum number of S phases for eqk location: integer positive number >1
+    #Minimum number of S phases for eqk location [integer positive number >1]
     no_min_s: 1
-    #Use back-azimuth data for eqk location: False or True
+    #Use back-azimuth data for eqk location [False or True]
     back_az: True
-    #back-azimuth standard deviation in degree: integer positive number
+    #back-azimuth standard deviation in degree [integer positive number]
     back_az_error: 30
-    #Use Pv differential amplitude data for eqk location: False or True
+    #Use Pv differential amplitude data for eqk location [False or True]
     diff_Amp: True
-    #Phase Amplitude attenuation coefficient: float negative number
+    #Phase Amplitude attenuation coefficient [float negative number]
     diff_Amp_b: -1.78
-    #differential amplitude standard deviation: float positive number
+    #differential amplitude standard deviation [float positive number]
     diff_Amp_error: 0.5
-    #Use S phases for eqk location: False or True
+    #Use S phases for eqk location [False or True]
     s_phases: True
 
 After configuring the software and correctly formatting the input files, it is possible to execute
-the routine for creating and formatting the grids. For example, naming the network folder as `ISNet`
+the routine to perform the construction of the grids. For example, naming the network folder as `ISNet`
 and the event folder as `12458a`:
 
     #!/usr/bin/python3
@@ -104,10 +104,9 @@ Finally you can run the location algorithm:
 	# RUN THE LOCATION ALGORITHM
     Launcher('ISNet','12458a')
 
-Afer running, the code provide in the folder of event `12458a` a hypo71 format` file MParLoc_event.h71` with all
-available information about the event location, a Map of location `MParLoc_event_FIGURE.pdf` which gives the shape
-of the spatial trend of the probability along the three dimensions and a textual log `MParLoc_event.log` of main 
-operations performed by the algorithm.
+Afer running, the code provide in the folder of event `12458a` an hypo71 format file `MParLoc_event.h71` with all
+available information about the event location, the location Map `MParLoc_event_FIGURE.pdf` which gives the shape
+of the spatial trend of the probability and a textual log `MParLoc_event.log` of main operations performed by the algorithm.
 
 
 
