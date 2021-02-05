@@ -106,7 +106,7 @@ Finally you can run the location algorithm:
 
 Afer running, the code provide in the folder of event `12458a` a hypo71 format` file MParLoc_event.h71` with all
 available information about the event location, a Map of location `MParLoc_event_FIGURE.pdf` which gives the shape
-of the spatial trend of the probability along the three dimensions and `MParLoc_event.log` a textual log of main 
+of the spatial trend of the probability along the three dimensions and a textual log `MParLoc_event.log` of main 
 operations performed by the algorithm.
 
 
