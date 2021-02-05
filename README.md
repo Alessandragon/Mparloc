@@ -25,13 +25,13 @@ Mparloc library consists of two main functions implemented in the source file Mp
     grid_creatore(Name_network,Name_event) # Tool for creating grids starting from NnLinLoc grids.
     Launcher(Name_network,Name_event) # Function that initialize and launch the Location algorithm.
 
-`Name_network` is a string object that contain the name of the folder where are: the sub-folder `grids`,
-the sub-folder `Name_event`(string object that contain the name of event) and a text file named `list_stations_4loc.dat`
-containing the station name list used from Mparloc.
-In the `grids` folder there are `.buf` and `.hdr` files of time grids created with Nonlinloc tools, when in 
-the `Name_event` folder there are `sac` files of the accelerometric data  with the station fields and transduction 
-coefficient correctly set in the header.
-Folowing an example of 	`list_stations_4loc.dat`:
+`Name_network` is a string object that contain the name of the folder where are: the sub-folder
+`grids`, the sub-folder `Name_event`(string object that contain the name of event) and a text file
+named `list_stations_4loc.dat` containing the station name list used from Mparloc.
+In the `grids` folder there are `.buf` and `.hdr` files of time grids created with Nonlinloc tools,
+when in the `Name_event` folder there are `sac` files of the accelerometric data  with the station 
+fields and transduction coefficient correctly set in the header.
+Following an example of `list_stations_4loc.dat`:
 
     AND3
     AVG3
