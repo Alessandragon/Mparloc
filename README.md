@@ -17,7 +17,7 @@ In order to improve the speed performance, a pseudo-global search algorithm is i
 to explore in a fast way a even very dense computational grids.
 
 
-## Config and Installing
+## Config, Installing and running
 
 Mparloc is written in pure python3 code tested with version 3.7.3, with several external library dependency:
 
