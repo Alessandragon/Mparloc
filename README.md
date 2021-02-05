@@ -1,5 +1,6 @@
 # Mparloc: Bayesian Method for Earthquake Location Using Multi-Parameter Data
-(c) 2020-2021 Alessandro Caruso <alessandro.caruso@unina.it>,
+(c) 2020-2021 Alessandro Caruso <alessandro.caruso@unina.it>, 
+post-doctoral researcher at RISSCLab - Department of PhysicsUniversity of Naples, Federico II
 
 [DOI](https://doi.org/10.1029/2020JB020359)
 
@@ -10,8 +11,8 @@ amplitude ratios and back-azimuths measured at a minimum of two stations.
 A complete posterior pdf of location is provided as a probability map on the 
 computational grids and uncertainty of location is estimate as the range where 
 the probability is over a prefixed threshold. 
-In order to improve the speed performance, a pseudo-global search (like octree)
-algorithm is implemented to explore in a fast way a even very dense computational grids.
+In order to improve the speed performance, a pseudo-global search algorithm is implemented
+to explore in a fast way a even very dense computational grids.
 
 
 ## Config and Installing
