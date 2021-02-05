@@ -27,15 +27,15 @@ Mparloc library consists of two main functions implemented in the source file Mp
 
 `Name_network` is a string object that contain the name of the folder where are:
 
-The `.buf` and `.hdr` files of time grids created with Nonlinloc tools for the 
-specific network and located in a dedicated sub-folder named `grids`.
+    The `.buf` and `.hdr` files of time grids created with Nonlinloc tools for the 
+    specific network and located in a dedicated sub-folder named `grids`.
 
-The `sac` files of the accelerometric data contained in a sub-folder whose name is 
-contained in the string `Name_event` with the station fields and transduction 
-coefficient correctly set in the header.
+    The `sac` files of the accelerometric data contained in a sub-folder whose name is 
+    contained in the string `Name_event` with the station fields and transduction 
+    coefficient correctly set in the header.
 
-The text file `list_stations_4loc.dat` with the station name list used from 
-location algorithm, such as:
+    The text file `list_stations_4loc.dat` with the station name list used from.
+Folowing an example of 	`list_stations_4loc.dat`:
 
     AND3
     AVG3
