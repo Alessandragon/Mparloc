@@ -104,9 +104,10 @@ Finally you can run the location algorithm:
 	# RUN THE LOCATION ALGORITHM
     Launcher('ISNet','12458a')
 
-Afer the code provide in the event folder `12458a` a hypo71 format `file MParLoc_event.h71` with all 
-available information about the event location, a Map of location `MParLoc_event_FIGURE.pdf` in pdf 
-format and `MParLoc_event.log` a textual log of main operations performed by the algorithm. 
+Afer running, the code provide in the folder of event `12458a` a hypo71 format` file MParLoc_event.h71` with all
+available information about the event location, a Map of location `MParLoc_event_FIGURE.pdf` which gives the shape
+of the spatial trend of the probability along the three dimensions and `MParLoc_event.log` a textual log of main 
+operations performed by the algorithm.
 
 
 
