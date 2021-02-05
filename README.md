@@ -23,7 +23,7 @@ Mparloc is written in pure python3 code tested with version 3.7.3, with several 
 
     obspy, numpy, nllgrid, math, pyproj, taup, matplotlib
 	
-Mparloc library consists of two main functions implemented in the source file Mparloc.py:
+Mparloc library consists of two main functions implemented in the source file `Mparloc.py` :
  
     grid_creatore(Name_network,Name_event) # Tool for creating grids starting from NnLinLoc grids.
     Launcher(Name_network,Name_event) # Function that initialize and launch the Location algorithm.
