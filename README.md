@@ -93,10 +93,18 @@ and the event folder as `12458a`:
     #IMPORT OF LIBRERY
     from MParLoc import grid_creator
 	# RUN THE GRID CREATOR CODE THAT READ THE NONLINLOC GRIDS 
-	#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUT GRIDS
+	#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUTH GRIDS
     grid_creator('ISNet','12458a')
 
+Finally you can run the location algorithm:
 
+    #!/usr/bin/python3
+    #IMPORT OF LIBRERY
+    from MParLoc import Launcher
+	# RUN THE LOCATION ALGORITHM
+	#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUTH GRIDS
+    Launcher('ISNet','12458a')
+	
 
 ## Testing
 
