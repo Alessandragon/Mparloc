@@ -62,6 +62,7 @@ def grid_creator(Network_folder,Event_folder):
  Nomi=Nomi.read()
  Nomi=Nomi.rsplit('\n')
  Config=Config.read()
+ grid_precision=str(Config.rsplit('grid_precision: ')[1].rsplit('\n')[0])
  diff_Amp_b=float(Config.rsplit('diff_Amp_b: ')[1].rsplit('\n')[0])
  NAME=[]
  tr=[]
@@ -102,22 +103,32 @@ def grid_creator(Network_folder,Event_folder):
   Rnode=None
  
  
-  grid_list_arrivals=sorted(glob.glob('*.P.*'+NAME[z]+'*'+'.hdr'))		   
-  arrival_matrix=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  grid_list_arrivals=sorted(glob.glob('*.P.*'+NAME[z]+'*'+'.hdr'))		 
+  if 'f' in   grid_precision:
+   arrival_matrix=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  if 'd' in   grid_precision:
+   arrival_matrix=np.float64(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
   arrival_matrixId=open('arrival_matrix'+NAME[z]+'.bin','w')
   arrival_matrix.tofile(arrival_matrixId)
  
   grid_list_arrivals=sorted(glob.glob('*.S.*'+NAME[z]+'*'+'.hdr'))
-  arrival_matrix_S=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  if 'f' in   grid_precision:
+   arrival_matrix_S=np.float32(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
+  if 'd' in   grid_precision:
+   arrival_matrix_S=np.float64(NLLGrid(grid_list_arrivals[0]).array.reshape(((NodeX*NodeY*NodeZ))))
   arrival_matrixId=open('arrival_matrixS'+NAME[z]+'.bin','w') 
   arrival_matrix_S.tofile(arrival_matrixId)
- 
-  BAznode=np.float32(np.degrees(np.arctan2(xx[z]-xnode,yy[z]-ynode)+math.pi))
-  Rnode=np.float32(diff_Amp_b*np.log10(np.sqrt(((xnode - xx[z])**2 + (yy[z] - ynode)**2)+znode**2)/1000))
-  BAznodeId=open('BAznode'+NAME[z]+'.bin','w')
+  
+  BAznodeId=open('BAznode'+NAME[z]+'.bin','w')  
+  RnodeId=open('Rnode'+NAME[z]+'.bin','w')
+  if 'f' in   grid_precision: 
+   BAznode=np.float32(np.degrees(np.arctan2(xx[z]-xnode,yy[z]-ynode)+math.pi))
+   Rnode=np.float32(diff_Amp_b*np.log10(np.sqrt(((xnode - xx[z])**2 + (yy[z] - ynode)**2)+znode**2)/1000))
+  if 'd' in   grid_precision:
+   BAznode=np.float64(np.degrees(np.arctan2(xx[z]-xnode,yy[z]-ynode)+math.pi))
+   Rnode=np.float64(diff_Amp_b*np.log10(np.sqrt(((xnode - xx[z])**2 + (yy[z] - ynode)**2)+znode**2)/1000))
   BAznode.reshape(((NodeX*NodeY*NodeZ))).tofile(BAznodeId)
   BAznodeId.close()
-  RnodeId=open('Rnode'+NAME[z]+'.bin','w')
   Rnode.reshape(((NodeX*NodeY*NodeZ))).tofile(RnodeId)
   RnodeId.close()
  os.chdir('../..')
@@ -567,7 +578,12 @@ class MainCode():
           self.th_pro=float(config_file.rsplit('Confidence_probability_threshold_level:')[1].rsplit('\n')[0])
           grd=glob.glob(Model_path_low+r'/*buf')
           grd = NLLGrid(grd[0])
-          Path_grid=Model_path_low	  		  
+          Path_grid=Model_path_low
+          self.grid_precision=str(config_file.rsplit('grid_precision: ')[1].rsplit('\n')[0])
+          if 'f' in self.grid_precision:
+           self.grid_precision='f'
+          if 'd' in self.grid_precision:
+           self.grid_precision='d'
           self.min_numP=int(config_file.rsplit('no_min_p: ')[1].rsplit('\n')[0])	
           self.min_numS=int(config_file.rsplit('no_min_s: ')[1].rsplit('\n')[0])			
           self.snr_wind_S=float(config_file.rsplit('snr_wind_s: ')[1].rsplit('\n')[0])		 
@@ -711,8 +727,6 @@ class MainCode():
              pick.append(0)
            else:
             pick.append(0)
-          # for i in range(0,len(NAME)):
-           # print(NAME[i],str(pick[i]),str(pickS[i]))
           global data 
           global dataY
           global dataX
@@ -806,6 +820,10 @@ class MainCode():
           global Zindexs
           global Lonev
           global Latev
+          global grd		  	 
+          global NodeX
+          global NodeY
+          global NodeZ
           second_loc=1
           while True:
            if new_sum==True:
@@ -878,10 +896,16 @@ class MainCode():
              Lonev,Latev=map(Locx,Locy,inverse=True)
              for i in range(0,len(NAME)):
                os.chdir(Path_grid)
-               grid_list_arrivals=sorted(glob.glob('*.P.*'+NAME[i]+'*'+'.buf'))		   
-               self.arrival_matrix=NLLGrid(grid_list_arrivals[0]).array
-               grid_list_arrivals_S=sorted(glob.glob('*.S.*'+NAME[i]+'*'+'.buf'))		   
-               self.arrival_matrix_S=NLLGrid(grid_list_arrivals_S[0]).array
+               f = open(Model_path_high+r'/arrival_matrix'+NAME[i]+'.bin', "rb")
+               floats = array(self.grid_precision)
+               floats.fromfile(f,NodeX*NodeY*NodeZ)
+               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))
+               self.arrival_matrix=(floats)
+               f = open(Model_path_high+r'/arrival_matrixS'+NAME[i]+'.bin', "rb")
+               floats = array(self.grid_precision)
+               floats.fromfile(f,NodeX*NodeY*NodeZ)
+               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))
+               self.arrival_matrix_S=(floats)
                dist=calc_dist(Latev,Lonev,staz_lat[i],staz_lon[i],flattening_of_planet=0,radius_of_planet_in_km=6372.797)
                evdp=-self.znode[LocX,LocY,LocZ]/1000
                if evdp < 0:
@@ -895,13 +919,6 @@ class MainCode():
                P_teo_p.append(self.arrival_matrix[LocX,LocY,LocZ][0])	
                os.chdir(Path_OUT)
              if second_loc==0:
-              global grd
-              dx_pre=grd.dx
-              dy_pre=grd.dy
-              dz_pre=grd.dz		  	 
-              global NodeX
-              global NodeY
-              global NodeZ
               Path_grid=Model_path_high
               grd=glob.glob(Model_path_high+r'/*buf')
               grd = NLLGrid(grd[0])
@@ -1189,7 +1206,7 @@ class MainCode():
             for indxc in range(0,len(NAME)):
              if pick[indxc]!=0:
               f = open(Model_path_high+r'/arrival_matrix'+NAME[indxc]+'.bin', "rb")
-              floats = array('f')
+              floats = array(self.grid_precision)
               floats.fromfile(f,NodeX*NodeY*NodeZ)
               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
               self.arrival_matrix.append(floats)
@@ -1197,7 +1214,7 @@ class MainCode():
               self.arrival_matrix.append([])	 
              if pickS[indxc]!=0:
               f = open(Model_path_high+r'/arrival_matrixS'+NAME[indxc]+'.bin', "rb")
-              floats = array('f')
+              floats = array(self.grid_precision)
               floats.fromfile(f,NodeX*NodeY*NodeZ)
               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
               self.arrival_matrix_S.append(floats)             
@@ -1205,7 +1222,7 @@ class MainCode():
               self.arrival_matrix_S.append([])
              if self.Pv[indxc]!=0:
               f = open(Model_path_high+r'/Rnode'+NAME[indxc]+'.bin', "rb")
-              floats = array('f')
+              floats = array(self.grid_precision)
               floats.fromfile(f,NodeX*NodeY*NodeZ)
               floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
               self.Rnode.append(floats)
@@ -1225,7 +1242,7 @@ class MainCode():
                  if (Baz_m)!=0:
                   os.chdir(Path_grid)
                   f = open(Model_path_high+r'/BAznode'+NAME[indxc]+'.bin', "rb")
-                  floats = array('f')
+                  floats = array(self.grid_precision)
                   floats.fromfile(f,NodeX*NodeY*NodeZ)
                   floats = np.reshape(floats,(NodeX,NodeY,NodeZ))[Xindexs,Yindexs,Zindexs]
                   self.BAznode=floats
