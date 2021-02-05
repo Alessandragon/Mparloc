@@ -43,7 +43,7 @@ Following an example of `list_stations_4loc.dat`:
     BSC3
     CGG3 ....
 
-The configuration of the module is done by compiling two files located in the `config_files` folder:
+The configuration of  module is done by compiling two files located in the `config_files` folder:
 
     run_loc.conf # Main configuration file
     weights_table.dat # Correspondence table between SNR(Signal to Noise Ratio) and the error in second on seismic pick phase
@@ -60,7 +60,7 @@ Example of `run_loc` file:
 
     #Setting parameters:
 	
-    #Parameter to set grid computationl precision [f for float, d for double-precision]
+    #Parameter to set grid computationl precision [f for single-precision, d for double-precision]
     grid_precision: f
     #Confidence level for error estimate [float number between 0 and 1]
     Confidence_probability_threshold_level: 0.5
