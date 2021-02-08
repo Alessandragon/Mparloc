@@ -7,14 +7,14 @@ Post-doctoral researcher at RISSCLab - Department of PhysicsUniversity of Naples
 [DOI](https://doi.org/10.1029/2020JB020359)
 
 ## Introduction
-I implemant a Bayesian method for the earthquake location which combines 
+I implement a Bayesian method for the earthquake location, which combines 
 the information derived from the differential P-wave and S-wave arrival times, 
 amplitude ratios and back-azimuths measured at a minimum of two stations. 
-A complete posterior pdf of location is provided as a probability map on the 
-computational grids and uncertainty of location is estimate as the range where 
+A complete posterior pdf of location is provided as a probability map
+and uncertainty of location is estimate as the range where 
 the probability is over a prefixed threshold. 
 In order to improve the speed performance, a pseudo-global search algorithm is implemented
-to explore in a fast way a even very dense computational grids.
+to explore in a fast way an even very dense computational grids.
 
 
 ## Config, Installing and running
@@ -28,12 +28,12 @@ Mparloc library consists of two main functions implemented in the source file `M
     grid_creatore(Name_network,Name_event) # Tool for creating grids starting from NnLinLoc grids.
     Launcher(Name_network,Name_event) # Function that initialize and launch the Location algorithm.
 
-`Name_network` and `Name_event` are  string object that contain rispectivly the name of the network folder 
+`Name_network` and `Name_event` are string object that contain respectively the name of the network folder 
 and the name of records folder. The network folder contains: a sub-folder `grids`, a records folder and 
 a text file named `list_stations_4loc.dat` containing the station name list used by Mparloc.
 The `grids` folder contains `.buf` and `.hdr` files of time grids created with tools of Nonlinloc,
-while in the records folder folder there are the accelerometric `sac` files with their station 
-fields and transduction coefficient correctly seted in header.
+while in the records folder there are the accelerometric `sac` files with their station 
+fields and transduction coefficient correctly fixed in header.
 Following an example of `list_stations_4loc.dat`:
 
     AND3
@@ -43,7 +43,7 @@ Following an example of `list_stations_4loc.dat`:
     BSC3
     CGG3 ....
 
-The configuration of  module is done by compiling two files located in the `config_files` folder:
+The configuration of module is done by compiling two files located in the `config_files` folder:
 
     run_loc.conf # Main configuration file
     weights_table.dat # Correspondence table between SNR(Signal to Noise Ratio) and the error in second on seismic pick phase
@@ -60,7 +60,7 @@ Example of `run_loc` file:
 
     #Setting parameters:
 	
-    #Parameter to set grid computationl precision [f for single-precision, d for double-precision]
+    #Parameter to set grid computation precision [f for single-precision, d for double-precision]
     grid_precision: f
     #Confidence level for error estimate [float number between 0 and 1]
     Confidence_probability_threshold_level: 0.5
@@ -93,7 +93,7 @@ and the event folder as `12458a`:
     #IMPORT OF LIBRERY
     from MParLoc import grid_creator
 	# RUN THE GRID CREATOR CODE THAT READ THE NONLINLOC GRIDS 
-	#AND CREATE A DIFFERENTIAL AMPLITUDE AND BACK-AZIMUTH GRIDS
+	#AND CREATE DIFFERENTIAL AMPLITUDE AND BACK-AZIMUTH GRIDS
     grid_creator('ISNet','12458a')
 
 Finally you can run the location algorithm:
@@ -104,7 +104,7 @@ Finally you can run the location algorithm:
 	# RUN THE LOCATION ALGORITHM
     Launcher('ISNet','12458a')
 
-Afer running, the code provide in the folder of event `12458a` an hypo71 format file `MParLoc_event.h71` with all
+After running, the code provide in the folder of event `12458a` an hypo71 format file `MParLoc_event.h71` with all
 available information about the event location, the location Map `MParLoc_event_FIGURE.pdf` which gives the shape
 of the spatial trend of the probability and a textual log `MParLoc_event.log` of main operations performed by the algorithm.
 
@@ -113,7 +113,7 @@ of the spatial trend of the probability and a textual log `MParLoc_event.log` of
 ## Testing
 
 
-After the installation of all dependence you can test the library run in the main folder the command:
+After the installation of all dependence, you can test the library run in the main folder the command:
 
     python3 Example.py (Ubuntu environment)
 	python Example.py (Windows environment)
