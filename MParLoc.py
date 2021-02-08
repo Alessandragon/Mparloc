@@ -1108,40 +1108,46 @@ class MainCode():
             iter_pre=copy.copy(iter)
             iter=8-iter_i
             if iter_i !=1:
-              if np.sum((self.TsumErr[Xindexs,Yindexs,Zindexs]))!=0:
-               TsumErr=(self.TsumErr.copy())
-               TsumErr=np.where(TsumErr==1, 0, TsumErr)
+              TsumErr=(self.TsumErr.copy())
+              TsumErr=np.where(TsumErr==1, 0, TsumErr)
+              if np.sum(TsumErr)>0:
                TsumErr=TsumErr/np.sum((TsumErr))
               else:
                TsumErr=(self.TsumErr.copy())	
-              if np.sum((self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]))!=0 and self.s_phases:
+              if self.s_phases:
                TsumErr_S_P=(self.TsumErr_S_P.copy())
                TsumErr_S_P=np.where(TsumErr_S_P==1, 0, TsumErr_S_P)
-               TsumErr_S_P=TsumErr_S_P/np.sum((TsumErr_S_P))
+               if np.sum((TsumErr_S_P))>0:
+                TsumErr_S_P=TsumErr_S_P/np.sum((TsumErr_S_P))
+               else:
+                TsumErr_S_P=1
               else:
                TsumErr_S_P=1
-              if np.sum((self.TsumErr_S[Xindexs,Yindexs,Zindexs]))!=0 and self.s_phases:
+              if self.s_phases:
                TsumErr_S=(self.TsumErr_S.copy())
                TsumErr_S=np.where(TsumErr_S==1, 0, TsumErr_S)
-               TsumErr_S=TsumErr_S/np.sum((TsumErr_S))
+               if np.sum((TsumErr_S))>0:
+                TsumErr_S=TsumErr_S/np.sum((TsumErr_S))
+               else:
+                TsumErr_S=1
               else:
                TsumErr_S=1
               if self.back_az:
-               if np.sum((self.BAzsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                 BAzsumErr=(self.BAzsumErr.copy())
                 BAzsumErr=np.where(BAzsumErr==1, 0, BAzsumErr)
-                BAzsumErr=BAzsumErr/np.sum((BAzsumErr))
-               else:
-                BAzsumErr=1
+                if np.sum((BAzsumErr))>0:
+                 BAzsumErr=BAzsumErr/np.sum((BAzsumErr))
+                else:
+                 BAzsumErr=1
               else:
                 BAzsumErr=1
               if self.diff_Amp:
-               if np.sum((self.RsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                 RsumErr=(self.RsumErr.copy())
                 RsumErr=np.where(RsumErr==1, 0, RsumErr)
-                RsumErr=RsumErr/np.sum(RsumErr)
-               else:
-                RsumErr=1	
+                if np.sum(RsumErr)>0:
+                 RsumErr=RsumErr/np.sum(RsumErr)
+                else:
+                 RsumErr=1	
               else:
                RsumErr=1
               if self.s_phases:
@@ -1149,51 +1155,53 @@ class MainCode():
               else:
                self.Locmatrix=TsumErr*BAzsumErr*RsumErr
               if np.sum(self.Locmatrix)==0:
-               Xindex, Yindex, Zindex=(np.where(self.Locmatrix==0)[0:3])
+               Xvect=np.arange(XMin,XMax,iter)
+               Yvect=np.arange(YMin,YMax,iter)
+               Zvect=np.arange(ZMin,ZMax,iter)
               else:
                Xindex, Yindex, Zindex=(np.where(self.Locmatrix>(np.max(self.Locmatrix)/100))[0:3])
-              if np.min(Xindex)!=np.max(Xindex):
-               XMin= np.min(Xindex)
-               XMax= np.max(Xindex)
-              else:
-               if np.min(Xindex)-iter_pre>=0:
-                XMin= np.min(Xindex)-iter_pre
+               if np.min(Xindex)!=np.max(Xindex):
+                XMin= np.min(Xindex)
+                XMax= np.max(Xindex)
                else:
-                XMin=0
-               if np.max(Xindex)+iter_pre<=NodeX:
-                XMax= np.max(Xindex)+iter_pre
+                if np.min(Xindex)-iter_pre>=0:
+                 XMin= np.min(Xindex)-iter_pre
+                else:
+                 XMin=0
+                if np.max(Xindex)+iter_pre<=NodeX:
+                 XMax= np.max(Xindex)+iter_pre
+                else:
+                 XMax=NodeX
+               if np.min(Yindex)!=np.max(Yindex):
+                YMin= np.min(Yindex)
+                YMax= np.max(Yindex)
                else:
-                XMax=NodeX
-              if np.min(Yindex)!=np.max(Yindex):
-               YMin= np.min(Yindex)
-               YMax= np.max(Yindex)
-              else:
-               if np.min(Yindex)-iter_pre>=0:
-                YMin= np.min(Yindex)-iter_pre
+                if np.min(Yindex)-iter_pre>=0:
+                 YMin= np.min(Yindex)-iter_pre
+                else:
+                 YMin=0
+                if np.max(Yindex)+iter_pre<=NodeY:
+                 YMax= np.max(Yindex)+iter_pre
+                else:
+                 YMax=NodeY
+               if np.min(Zindex)!=np.max(Zindex):
+                ZMin= np.min(Zindex)
+                ZMax= np.max(Zindex)
                else:
-                YMin=0
-               if np.max(Yindex)+iter_pre<=NodeY:
-                YMax= np.max(Yindex)+iter_pre
-               else:
-                YMax=NodeY
-              if np.min(Zindex)!=np.max(Zindex):
-               ZMin= np.min(Zindex)
-               ZMax= np.max(Zindex)
-              else:
-               if np.min(Zindex)-iter_pre>=0:
-                ZMin= np.min(Zindex)-iter_pre
-               else:
-                ZMin=0
-               if np.max(Zindex)+iter_pre<=NodeZ:
-                ZMax= np.max(Zindex)+iter_pre
-               else:
-                ZMax=NodeZ
-              Xvect_pre.extend(list(Xvect))
-              Yvect_pre.extend(list(Yvect))
-              Zvect_pre.extend(list(Zvect))
-              Xvect=np.arange(XMin,XMax,iter)
-              Yvect=np.arange(YMin,YMax,iter)
-              Zvect=np.arange(ZMin,ZMax,iter) 
+                if np.min(Zindex)-iter_pre>=0:
+                 ZMin= np.min(Zindex)-iter_pre
+                else:
+                 ZMin=0
+                if np.max(Zindex)+iter_pre<=NodeZ:
+                 ZMax= np.max(Zindex)+iter_pre
+                else:
+                 ZMax=NodeZ
+               Xvect_pre.extend(list(Xvect))
+               Yvect_pre.extend(list(Yvect))
+               Zvect_pre.extend(list(Zvect))
+               Xvect=np.arange(XMin,XMax,iter)
+               Yvect=np.arange(YMin,YMax,iter)
+               Zvect=np.arange(ZMin,ZMax,iter) 
             else:
              Xvect=np.arange(XMin,XMax,iter)
              Yvect=np.arange(YMin,YMax,iter)
