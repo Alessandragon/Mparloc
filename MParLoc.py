@@ -245,7 +245,7 @@ class Location_MAP():
         Lonsup,Latsup=map(win.xnode[Index_errorX[1],0,0],win.ynode[0,Index_errorY[1],0],inverse=True)
         win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION LAT: '+str(Latev)+'['+str(LatInf)+' , '+str(Latsup)+']'+'\n') 
         win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION LON: '+str(Lonev)+'['+str(Loninf)+' , '+str(Lonsup)+']'+'\n')  
-        win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION DEP(km): '+str(-win.znode[index_LocY[0],index_LocX[0],index_LocZ[0]]/1000)+'['+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[0]]/1000)+' , '+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[1]]/1000)+']'+'\n')  
+        win.file_log.write(str(data[0].stats.endtime+0.1)+': NEW LOCATION DEP(km): '+str(-win.znode[index_LocX[0],index_LocY[0],index_LocZ[0]]/1000)+'['+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[0]]/1000)+' , '+str(-win.znode[index_LocX[0],index_LocY[0],Index_errorZ[1]]/1000)+']'+'\n')  
         win.file_log.write('Error_E-W: '+str(np.abs(win.xnode[Index_errorX[0],0,0]-win.xnode[Index_errorX[1],0,0])/2000)+' Km\n') 
         win.file_log.write('Error_N-S: '+str(np.abs(win.ynode[0,Index_errorY[0],0]-win.ynode[0,Index_errorY[1],0])/2000)+' Km\n') 
         win.file_log.write('Error_Z: '+str(np.abs(win.znode[0,0,Index_errorZ[0]]-win.znode[0,0,Index_errorZ[1]])/2000)+' Km\n') 
@@ -451,9 +451,9 @@ class Location_MAP():
 def BAZ(Trace_orig,accE,accN,staz_index):
 
 #################### DATA processing   ###############################
- AccZ=(((((Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=1,freqmax=4)
- AccE=(((((accE.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=1,freqmax=4)
- AccN=(((((accN.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=1,freqmax=4)
+ AccZ=(((((Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=0.5,freqmax=3)
+ AccE=(((((accE.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=0.5,freqmax=3)
+ AccN=(((((accN.slice(pick[staz_index]-3,pick[staz_index]+1)))))).detrend('constant').filter("bandpass",freqmin=0.5,freqmax=3)
  
  ################### Pre-signal noise-level estimation################
  
@@ -592,6 +592,8 @@ class MainCode():
           self.diff_Amp_b=float(config_file.rsplit('diff_Amp_b: ')[1].rsplit('\n')[0])
           self.diff_Amp_error=float(config_file.rsplit('diff_Amp_error: ')[1].rsplit('\n')[0])
           self.back_az_error=float(config_file.rsplit('back_az_error: ')[1].rsplit('\n')[0])
+          self.data_type=[]
+
           if 'False' in self.diff_Amp:
             self.diff_Amp=False	
           else:		
@@ -636,14 +638,15 @@ class MainCode():
           for i in range(0,len(Lista_sac)):
            if 'Z' in read(Lista_sac[i])[0].stats.sac.kcmpnm or 'U' in read(Lista_sac[i])[0].stats.sac.kcmpnm:
             if read(Lista_sac[i])[0].stats.station in Nomi:
+             self.data_type.append(read(Lista_sac[i])[0].stats.sac.idep)
              NAME.append(read(Lista_sac[i])[0].stats.station)
              self.tr.append(read(Lista_sac[i])[0])
              for j in range(0,len(Lista_sac)):
-              if read(Lista_sac[j])[0].stats.station == NAME[-1]:
+              if read(Lista_sac[j])[0].stats.station == NAME[-1] and read(Lista_sac[j])[0].stats.sac.idep == self.data_type[-1]:
                if 'N' in read(Lista_sac[j])[0].stats.sac.kcmpnm:
                 self.trY.append(read(Lista_sac[j])[0])
                if 'E' in read(Lista_sac[j])[0].stats.sac.kcmpnm:			
-                self.trX.append(read(Lista_sac[j])[0])			 
+                self.trX.append(read(Lista_sac[j])[0])
           global RU_sup	
           global xx
           global yy
@@ -840,45 +843,49 @@ class MainCode():
             self.file_log.close()
             os.chdir(Path_grid)
             lock_log.release()
+            if self.diff_Amp:
+             self.RsumErr=np.where(self.RsumErr==1, 0, self.RsumErr)
             if self.back_az:
-             if np.sum((self.BAzsumErr))!=0:
+             self.BAzsumErr=np.where(self.BAzsumErr==1, 0, self.BAzsumErr)
+            self.TsumErr=np.where(self.TsumErr==1, 0, self.TsumErr)
+            self.TsumErr_S_P=np.where(self.TsumErr_S_P==1, 0, self.TsumErr_S_P)
+            self.TsumErr_S=np.where(self.TsumErr_S==1, 0, self.TsumErr_S)
+
+            if np.sum((self.TsumErr))!=0:
+               TsumErr=(self.TsumErr.copy())
+               TsumErr=TsumErr/np.sum((TsumErr))
+            else:
+               TsumErr=(self.TsumErr.copy())	
+            if np.sum((self.TsumErr_S_P))!=0:
+               TsumErr_S_P=(self.TsumErr_S_P.copy())
+            else:
+               TsumErr_S_P=1
+            if np.sum((self.TsumErr_S))!=0:
+               TsumErr_S=(self.TsumErr_S.copy())
+               TsumErr_S=TsumErr_S/np.sum((TsumErr_S))
+            else:
+               TsumErr_S=1
+            if self.back_az:
+               if np.sum((self.BAzsumErr))!=0:
                 BAzsumErr=(self.BAzsumErr.copy())
                 BAzsumErr=BAzsumErr/np.sum((BAzsumErr))
-             else:
+               else:
                 BAzsumErr=1
             else:
                 BAzsumErr=1
             if self.diff_Amp:
-             if np.sum((self.RsumErr))!=0:
+               if np.sum((self.RsumErr))!=0:
                 RsumErr=(self.RsumErr.copy())
-                RsumErr=RsumErr/np.sum((RsumErr))
-             else:
-                RsumErr=1
+                RsumErr=RsumErr/np.sum(RsumErr)
+               else:
+                RsumErr=1	
             else:
-                RsumErr=1
-            self.TsumErr=np.where(self.TsumErr==1, 0, self.TsumErr)
-            if np.sum((self.TsumErr))!=0:
-             TsumErr=(self.TsumErr.copy())/np.sum((self.TsumErr))
-            else:
-             TsumErr=1
-            self.TsumErr=np.where(self.TsumErr==0, 1, self.TsumErr)
-            self.TsumErr_S_P=np.where(self.TsumErr_S_P==1, 0, self.TsumErr_S_P)			 
-            if np.sum((self.TsumErr_S_P))!=0:
-             TsumErr_S_P=(self.TsumErr_S_P.copy())/np.sum((self.TsumErr_S_P))
-            else:
-             TsumErr_S_P=1
-            self.TsumErr_S_P=np.where(self.TsumErr_S_P==0, 1, self.TsumErr_S_P)			 
-            self.TsumErr_S=np.where(self.TsumErr_S==1, 0, self.TsumErr_S)
-            if np.sum((self.TsumErr_S))!=0:
-             TsumErr_S=(self.TsumErr_S.copy())/np.sum((self.TsumErr_S))
-            else:
-             TsumErr_S=1
-            self.TsumErr_S=np.where(self.TsumErr_S==0, 1, self.TsumErr_S)
+               RsumErr=1
+			   
             if self.s_phases:
-              self.Locmatrix=TsumErr*TsumErr_S_P*TsumErr_S*RsumErr*BAzsumErr
+               self.Locmatrix=TsumErr*TsumErr_S_P*TsumErr_S*BAzsumErr*RsumErr
             else:
-              self.Locmatrix=TsumErr*RsumErr*BAzsumErr			 
-            self.Locmatrix=self.Locmatrix
+               self.Locmatrix=TsumErr*BAzsumErr*RsumErr	
             LocX, LocY, LocZ=(np.where(self.Locmatrix==np.max(self.Locmatrix))[0:3])
             P_teo_p=[]
             S_teo_p=[]
@@ -1045,7 +1052,10 @@ class MainCode():
                Pa_noise=(np.max(np.abs(Trace_orig.trim(pick[staz_index]-(self.snr_wind_p+0.2),pick[staz_index]-0.2).detrend('constant').data))*self.logger[staz_index]/self.sensor[staz_index])*100
                Pa=(np.max(np.abs(acc.trim(pick[staz_index],pick[staz_index]+self.snr_wind_p).detrend('constant').data))*self.logger[staz_index]/self.sensor[staz_index])*100
                SNR[staz_index]=(Pa/Pa_noise)
-               self.Pv[staz_index]=(np.max(np.abs(Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+2).detrend('constant').filter("bandpass",freqmin=0.075,freqmax=25).data))*self.logger[staz_index]/self.sensor[staz_index])*100
+               if self.data_type[staz_index]==3:
+                self.Pv[staz_index]=(np.max(np.abs(Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+2).detrend('constant').filter("bandpass",freqmin=0.075,freqmax=25).data))*self.logger[staz_index]/self.sensor[staz_index])*100
+               if self.data_type[staz_index]==5:
+                self.Pv[staz_index]=(np.max(np.abs((Trace_orig.slice(pick[staz_index]-3,pick[staz_index]+2).integrate().detrend('constant').filter("bandpass",freqmin=0.075,freqmax=25).data)))*self.logger[staz_index]/self.sensor[staz_index])*100
                if SNR[staz_index] <= self.Tabella_P[0][0]:
                 pick[staz_index]=self.Tabella_P[0][1]
                if SNR[staz_index] > self.Tabella_P[0][0]  and SNR[staz_index] <= self.Tabella_P[1][0]:
@@ -1100,23 +1110,27 @@ class MainCode():
             if iter_i !=1:
               if np.sum((self.TsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                TsumErr=(self.TsumErr.copy())
-               TsumErr[Xindexs,Yindexs,Zindexs]=TsumErr[Xindexs,Yindexs,Zindexs]/np.sum((TsumErr[Xindexs,Yindexs,Zindexs]))
+               TsumErr=np.where(TsumErr==1, 0, TsumErr)
+               TsumErr=TsumErr/np.sum((TsumErr))
               else:
                TsumErr=(self.TsumErr.copy())	
-              if np.sum((self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]))!=0:
+              if np.sum((self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]))!=0 and self.s_phases:
                TsumErr_S_P=(self.TsumErr_S_P.copy())
-               TsumErr_S_P[Xindexs,Yindexs,Zindexs]=TsumErr_S_P[Xindexs,Yindexs,Zindexs]/np.sum((TsumErr_S_P[Xindexs,Yindexs,Zindexs]))
+               TsumErr_S_P=np.where(TsumErr_S_P==1, 0, TsumErr_S_P)
+               TsumErr_S_P=TsumErr_S_P/np.sum((TsumErr_S_P))
               else:
                TsumErr_S_P=1
-              if np.sum((self.TsumErr_S[Xindexs,Yindexs,Zindexs]))!=0:
+              if np.sum((self.TsumErr_S[Xindexs,Yindexs,Zindexs]))!=0 and self.s_phases:
                TsumErr_S=(self.TsumErr_S.copy())
-               TsumErr_S[Xindexs,Yindexs,Zindexs]=TsumErr_S[Xindexs,Yindexs,Zindexs]/np.sum((TsumErr_S[Xindexs,Yindexs,Zindexs]))
+               TsumErr_S=np.where(TsumErr_S==1, 0, TsumErr_S)
+               TsumErr_S=TsumErr_S/np.sum((TsumErr_S))
               else:
                TsumErr_S=1
               if self.back_az:
                if np.sum((self.BAzsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                 BAzsumErr=(self.BAzsumErr.copy())
-                BAzsumErr[Xindexs,Yindexs,Zindexs]=BAzsumErr[Xindexs,Yindexs,Zindexs]/np.sum((BAzsumErr[Xindexs,Yindexs,Zindexs]))
+                BAzsumErr=np.where(BAzsumErr==1, 0, BAzsumErr)
+                BAzsumErr=BAzsumErr/np.sum((BAzsumErr))
                else:
                 BAzsumErr=1
               else:
@@ -1124,16 +1138,16 @@ class MainCode():
               if self.diff_Amp:
                if np.sum((self.RsumErr[Xindexs,Yindexs,Zindexs]))!=0:
                 RsumErr=(self.RsumErr.copy())
-                RsumErr[Xindexs,Yindexs,Zindexs]=RsumErr[Xindexs,Yindexs,Zindexs]/np.sum((RsumErr[Xindexs,Yindexs,Zindexs]))
+                RsumErr=np.where(RsumErr==1, 0, RsumErr)
+                RsumErr=RsumErr/np.sum(RsumErr)
                else:
                 RsumErr=1	
               else:
-               RsumErr=1					
+               RsumErr=1
               if self.s_phases:
                self.Locmatrix=TsumErr*TsumErr_S_P*TsumErr_S*BAzsumErr*RsumErr
               else:
                self.Locmatrix=TsumErr*BAzsumErr*RsumErr
-              self.Locmatrix=np.where(self.Locmatrix==1, 0, self.Locmatrix)
               if np.sum(self.Locmatrix)==0:
                Xindex, Yindex, Zindex=(np.where(self.Locmatrix==0)[0:3])
               else:
@@ -1253,11 +1267,11 @@ class MainCode():
                 if pickS[staz_index]!=0 and pick[staz_index]!=0 :
                   self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]=(self.TsumErr_S_P[Xindexs,Yindexs,Zindexs]*(1/((SNR[staz_index]+SNR_S[staz_index])))*np.exp(-((((self.arrival_matrix_S[staz_index]-self.arrival_matrix[staz_index])-((pickS[staz_index]-pick[staz_index]))))**2/(((SNR[staz_index]+SNR_S[staz_index])*2)**2))))
                 for i in range(0,len(NAME)):
-                  if self.Pv[i]!=0 and self.Pv[staz_index]!=0 and self.diff_Amp:
+                  if self.Pv[i]!=0 and self.Pv[staz_index]!=0 and self.diff_Amp and NAME[staz_index]!=NAME[i]:
                     self.RsumErr[Xindexs,Yindexs,Zindexs]=self.RsumErr[Xindexs,Yindexs,Zindexs]*np.exp(-(((self.Rnode[staz_index]-self.Rnode[i])-(+self.diff_Amp_b*math.log10(self.Pv[staz_index])-self.diff_Amp_b*math.log10(self.Pv[i])))**2/(2*(self.diff_Amp_error)**2)))
-                  if pickS[staz_index]!=0 and pickS[i]!=0 and i!=staz_index and pick[staz_index]==0 :             
+                  if pickS[staz_index]!=0 and pickS[i]!=0 and i!=staz_index and pick[staz_index]==0 and NAME[staz_index]!=NAME[i]:             
                     self.TsumErr_S[Xindexs,Yindexs,Zindexs]=(self.TsumErr_S[Xindexs,Yindexs,Zindexs]*(1/((SNR_S[staz_index]+SNR_S[i])))*np.exp(-(((self.arrival_matrix_S[staz_index]-self.arrival_matrix_S[i])-(pickS[staz_index]-pickS[i]))**2/((((SNR_S[staz_index]+SNR_S[i]))*2)**2))))
-                  if pick[staz_index]!=0 and pick[i]!=0 and i!=staz_index :
+                  if pick[staz_index]!=0 and pick[i]!=0 and i!=staz_index and NAME[staz_index]!=NAME[i] :
                     self.TsumErr[Xindexs,Yindexs,Zindexs]=(self.TsumErr[Xindexs,Yindexs,Zindexs]*(1/((SNR[staz_index]+SNR[i])))*np.exp(-(((self.arrival_matrix[staz_index]-self.arrival_matrix[i])-(pick[staz_index]-pick[i]))**2/(((SNR[staz_index]+SNR[i])*2)**2))))
            new_sum=True
            end_loc=True
