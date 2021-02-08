@@ -2,7 +2,7 @@
 (c) 2020-2021 Alessandro Caruso <alessandro.caruso@unina.it>,
 
 
-Post-doctoral researcher at RISSCLab - Department of PhysicsUniversity of Naples, Federico II
+Post-doctoral researcher at RISSCLab - Department of Physics (University of Naples Federico II)
 
 [DOI](https://doi.org/10.1029/2020JB020359)
 
