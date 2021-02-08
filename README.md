@@ -113,7 +113,7 @@ of the spatial trend of the probability and a textual log `MParLoc_event.log` of
 ## Testing
 
 
-After the installation of all dependence, you can test the library run in the main folder the command:
+After the installation of all dependence, you can test the library run the follow command in the main folder:
 
     python3 Example.py (Ubuntu environment)
 	python Example.py (Windows environment)
