@@ -17,7 +17,7 @@ In order to improve the speed performance, a pseudo-global search algorithm is i
 to explore in a fast way an even very dense computational grids.
 
 
-## Config, Installing and running
+## Config, Installing and Running
 
 Mparloc is written in pure python3 code tested with version 3.7.3 and several external library dependency installed:
 
@@ -28,9 +28,9 @@ Mparloc library consists of two main functions implemented in the source file `M
     grid_creatore(Name_network,Name_event) # Tool for creating grids starting from NnLinLoc grids.
     Launcher(Name_network,Name_event) # Function that initialize and launch the location algorithm.
 
-`Name_network` and `Name_event` are string object that contain respectively the name of the network folder 
+`Name_network` and `Name_event` are string objects that contain respectively the name of the network folder 
 and the name of records folder. The network folder contains: a sub-folder `grids`, a records folder and 
-a text file named `list_stations_4loc.dat` containing the station name list used by Mparloc.
+a text file named `list_stations_4loc.dat` that is the station name list used by Mparloc.
 The `grids` folder contains `.buf` and `.hdr` files of time grids created with tools of Nonlinloc,
 while in the records folder there are the accelerometric `sac` files with their station 
 fields and transduction coefficient correctly fixed in header.
@@ -86,7 +86,7 @@ Example of `run_loc` file:
     s_phases: True
 
 After configuring the software and correctly formatting the input files, it is possible to execute
-the routine to perform the construction of the grids. For example, naming the network folder as `ISNet`
+the routine to perform the building of the grids. For example, naming the network folder as `ISNet`
 and the event folder as `12458a`:
 
     #!/usr/bin/python3
