@@ -19,14 +19,14 @@ to explore in a fast way an even very dense computational grids.
 
 ## Config, Installing and running
 
-Mparloc is written in pure python3 code tested with version 3.7.3, with several external library dependency:
+Mparloc is written in pure python3 code tested with version 3.7.3 and several external library dependency installed:
 
     obspy, numpy, nllgrid, math, pyproj, taup, matplotlib
 	
 Mparloc library consists of two main functions implemented in the source file `Mparloc.py` :
  
     grid_creatore(Name_network,Name_event) # Tool for creating grids starting from NnLinLoc grids.
-    Launcher(Name_network,Name_event) # Function that initialize and launch the Location algorithm.
+    Launcher(Name_network,Name_event) # Function that initialize and launch the location algorithm.
 
 `Name_network` and `Name_event` are string object that contain respectively the name of the network folder 
 and the name of records folder. The network folder contains: a sub-folder `grids`, a records folder and 
@@ -50,7 +50,7 @@ The configuration of module is done by compiling two files located in the `confi
 	
 Example of `weights_table` file:
 
-    # SNRmin SNRmax Wp Ws
+    # SNRmin SNRmax Wp(error on P) Ws(error on S)
     10 0.25 0.55  # In the first line there is only SNRmax
     10 20 0.15 0.25
     20 50 0.1 0.15
