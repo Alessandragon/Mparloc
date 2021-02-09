@@ -32,7 +32,7 @@ Mparloc library consists of two main functions implemented in the source file `M
 and the name of records folder. The network folder contains: a sub-folder `grids`, a records folder and 
 a text file named `list_stations_4loc.dat` that is the station name list used by Mparloc.
 The `grids` folder contains `.buf` and `.hdr` files of time grids created with tools of Nonlinloc,
-while in the records folder there are the accelerometric `sac` files with their station 
+while in the records folder there are the accelerometric or velocimetric `sac` files with their station 
 fields and transduction coefficient correctly fixed in header.
 Following an example of `list_stations_4loc.dat`:
 
@@ -72,7 +72,7 @@ Example of `run_loc` file:
     no_min_p: 2
     #Minimum number of S phases for eqk location [integer positive number >1]
     no_min_s: 1
-    #Minimum SNR to reject low quality data: positive integer
+    #Minimum SNR to reject low quality data [integer positive number]
     min_SNR: 0
     #Use back-azimuth data for eqk location [False or True]
     back_az: True
