@@ -592,6 +592,7 @@ class MainCode():
           self.diff_Amp_b=float(config_file.rsplit('diff_Amp_b: ')[1].rsplit('\n')[0])
           self.diff_Amp_error=float(config_file.rsplit('diff_Amp_error: ')[1].rsplit('\n')[0])
           self.back_az_error=float(config_file.rsplit('back_az_error: ')[1].rsplit('\n')[0])
+          min_SNR=int(config_file.rsplit('min_SNR: ')[1].rsplit('\n')[0])
           self.data_type=[]
 
           if 'False' in self.diff_Amp:
@@ -611,8 +612,8 @@ class MainCode():
           Tabella_Pesi=open('../config_files/weights_table.dat')
           Tabella_Pesi=Tabella_Pesi.read()  
           Tabella_Pesi=Tabella_Pesi.rsplit('\n')
-          self.Tabella_P=[[2,0]]
-          self.Tabella_S=[[2,0]]
+          self.Tabella_P=[[min_SNR,0]]
+          self.Tabella_S=[[min_SNR,0]]
           for count in Tabella_Pesi:
            if len(count.rsplit(' '))==4:
             self.Tabella_P.append([float(count.rsplit(' ')[1]),float(count.rsplit(' ')[2])])
