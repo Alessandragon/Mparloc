@@ -72,6 +72,8 @@ Example of `run_loc` file:
     no_min_p: 2
     #Minimum number of S phases for eqk location [integer positive number >1]
     no_min_s: 1
+    #Minimum SNR to reject low quality data: positive integer
+    min_SNR: 0
     #Use back-azimuth data for eqk location [False or True]
     back_az: True
     #back-azimuth standard deviation in degree [integer positive number]
