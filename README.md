@@ -88,7 +88,7 @@ Example of `run_loc` file:
     s_phases: True
 
 After configuring the software and correctly formatting the input files, it is possible to execute
-the routine to perform the building of the grids. For example, naming the network folder as `ISNet`
+the tool to perform the building of the grids. For example, naming the network folder as `ISNet`
 and the event folder as `12458a`:
 
     #!/usr/bin/python3
