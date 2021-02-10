@@ -87,8 +87,8 @@ Example of `run_loc` file:
     #Use S phases for eqk location [False or True]
     s_phases: True
 
-After configuring the software and correctly formatting the input files, it is possible to execute
-the tool to perform the building of the grids. For example, naming the network folder as `ISNet`
+After configuring the software and correctly formatting input files, it is possible to execute
+the tool to perform the building of grids. For example, naming the network folder as `ISNet`
 and the event folder as `12458a`:
 
     #!/usr/bin/python3
@@ -108,7 +108,7 @@ Finally you can run the location algorithm:
 
 After running, the code provide in the folder of event `12458a` an hypo71 format file `MParLoc_event.h71` with all
 available information about the event location, the location Map `MParLoc_event_FIGURE.pdf` which gives the shape
-of the spatial trend of the probability and a textual log `MParLoc_event.log` of main operations performed by the algorithm.
+of the probability spatial trend and a textual log `MParLoc_event.log` of main operations performed by the algorithm.
 
 
 
